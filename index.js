@@ -40,7 +40,7 @@ app.get('/', async (req, res) => {
         const response = await axios.get(url); // Make a GET request to the NASA API
         const data = response.data;
         console.log(data);
-        res.render("APOD.ejs");
+        res.render("APOD.ejs", {APOD: data}); // Render the 'APOD.ejs' view with the fetched data
     }
     catch (error){
         console.error("Error fetching data from NASA API:", error);
