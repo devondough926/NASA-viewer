@@ -3,9 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
     <title>Document</title>
 </head>
 <body>
-    <p>Hello world</p>
+    <div class = "main-container">
+        <h1>NASA's Astronomy Picture of the Day</h1>
+        <div class = "APOD-header">
+            <img src = "<%= APOD.hdurl %>" class = "APOD-img" alt = "Astronomy Picture of the Day">
+            <div>
+                <h2><%= APOD.title%></h2>
+            </div>
+            <p><%= APOD.explanation%></p>
+        </div>
+    </div>
+    <div class ="Photo-galary">
+        <form action = "/gallery" method = "POST">
+            <select name="img" id="img">
+                <option value = "Moon">Moon</option>
+                <option value = "Mars">Mars</option>
+                <option value = "Earth">Earth</option>
+                <option value = "Sun">Sun</option>
+                <option value = "Jupiter">Jupiter</option>
+                <option value = "Saturn">Saturn</option>
+                <option value = "Venus">Venus</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form> 
+        <% if (IMG.length === 0) {%>
+            <h2 class = "Gallery-header">No images</h2>
+        <% } else {%>
+            <h2 class ="Gallery-header">Gallery</h2>
+            <div class = "gallery">
+                <div class = "gallery-img">
+                    <% for (var i = 0; i < IMG.length; i++){ %>
+                        <img src = "<%= IMG[i] %>"/>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <footer class="site-footer">
+    <p>&copy; 2025 Devon | <a href="https://github.com/devondough926" target="_blank">GitHub</a></p>
+</footer>
+
 </body>
 </html>
