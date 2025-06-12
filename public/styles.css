@@ -60,6 +60,7 @@ body{
 }
 
 
+
 .site-footer {
   background: #393e46;
   color: #fff;
@@ -70,6 +71,31 @@ body{
 .site-footer a {
   color: #ffd369;
   text-decoration: none;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 10px;
+
+}
+
+.search-form input {
+  padding: 10px;
+  border: 1px solid #393e46;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 400px;
+}
+.search-form button {
+  padding: 10px 20px;
+  background-color: #008CBA;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 

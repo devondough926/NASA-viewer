@@ -37,49 +37,59 @@ app.use(express.static("public"));
 let test = false;
 let query = "";
 app.get('/', async (req, res) => {
-    const apiKEY = process.env.NASA_API_KEY; // Get the API key from environment variables
+    const apiKEY = process.env.NASA_API_KEY;
     const APODurl = `https://api.nasa.gov/planetary/apod?api_key=${apiKEY}`;
-    const Galleryurl = "https://images-api.nasa.gov";
     let imgArray = [];
+    let searched = false;
 
     try {
-        const APODresponse = await axios.get(APODurl); // Make a GET request to the NASA API
+        const APODresponse = await axios.get(APODurl);
         const APODdata = APODresponse.data;
-        
-        //console.log(APODdata);
-        if (test){
-            const Galleryresponse = await axios.get(`${Galleryurl}/search?q=${query}&media_type=image`); // Make a GET request to the NASA image gallery API
-            const Gallerydata = Galleryresponse.data;
-            const items = Gallerydata.collection.items;
-            for (let i = items.length - 1; i > 0; i--) { // Shuffle the items array(shuffles the gallery images from the API)
-                const j = Math.floor(Math.random() * (i + 1));
-                [items[i], items[j]] = [items[j], items[i]];
-            }
-            console.log(Gallerydata);
-            for (var i = 0; i < 9; i++) { //
-                imgArray.push(Gallerydata.collection.items[i].links[0].href); // Collect image URLs from the gallery data
-            }
-            console.log(imgArray);
-        }   
 
-
-        res.render("APOD.ejs", {APOD: APODdata, IMG: imgArray}); // Render the 'APOD.ejs' view with the fetched data
+        // On GET, just show APOD and empty gallery
+        res.render("APOD.ejs", { APOD: APODdata, IMG: imgArray, searched });
     }
-    catch (error){
+    catch (error) {
         console.error("Error fetching data from NASA API:", error);
         res.status(500).send("Error fetching data from NASA API");
     }
 });
 
+app.post('/gallery', async (req, res) => {
+    const apiKEY = process.env.NASA_API_KEY;
+    const APODurl = `https://api.nasa.gov/planetary/apod?api_key=${apiKEY}`;
+    const Galleryurl = "https://images-api.nasa.gov";
+    let imgArray = [];
+    let searched = true;
+    const query = req.body.img;
 
-app.post('/gallery',  (req, res) => {
-    query = req.body.img;
-    test = true;
-    console.log(query);
-    res.redirect('/'); // Redirect to the root endpoint to fetch the gallery image
+    try {
+        const APODresponse = await axios.get(APODurl);
+        const APODdata = APODresponse.data;
 
+        if (query) {
+            const Galleryresponse = await axios.get(`${Galleryurl}/search?q=${encodeURIComponent(query)}&media_type=image`);
+            const items = Galleryresponse.data.collection.items;
 
+            // Shuffle items
+            for (let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            // Take up to 9 images
+            for (let i = 0; i < Math.min(9, items.length); i++) {
+                if (items[i].links && items[i].links[0]) {
+                    imgArray.push(items[i].links[0].href);
+                }
+            }
+        }
 
+        res.render("APOD.ejs", { APOD: APODdata, IMG: imgArray, searched });
+    }
+    catch (error) {
+        console.error("Error fetching data from NASA API:", error);
+        res.status(500).send("Error fetching data from NASA API");
+    }
 });
 
 

@@ -18,22 +18,16 @@
         </div>
     </div>
     <div class ="Photo-galary">
-        <form action = "/gallery" method = "POST">
-            <select name="img" id="img">
-                <option value = "Moon">Moon</option>
-                <option value = "Mars">Mars</option>
-                <option value = "Earth">Earth</option>
-                <option value = "Sun">Sun</option>
-                <option value = "Jupiter">Jupiter</option>
-                <option value = "Saturn">Saturn</option>
-                <option value = "Venus">Venus</option>
-            </select>
+        <form action = "/gallery" method = "POST" class = "search-form">
+            <label for="img">Search for images:</label>
+            <input type="text" id="img" name="img" placeholder="Enter a keyword" required>
             <button type="submit">Submit</button>
         </form> 
         <% if (IMG.length === 0) {%>
-            <h2 class = "Gallery-header">No images</h2>
+            <div class = "gallery">
+                <p>No images to display. Please search for images.</p>
+            </div>
         <% } else {%>
-            <h2 class ="Gallery-header">Gallery</h2>
             <div class = "gallery">
                 <div class = "gallery-img">
                     <% for (var i = 0; i < IMG.length; i++){ %>
@@ -45,8 +39,13 @@
     </div>
 
     <footer class="site-footer">
-    <p>&copy; 2025 Devon | <a href="https://github.com/devondough926" target="_blank">GitHub</a></p>
-</footer>
+    <p>&copy; 2025 Devon | <a href="https://github.com/devondough926/NASA-viewer" target="_blank">GitHub</a></p>
+    </footer>
+    <% if (searched && IMG.length === 0) { %>
+    <script>
+        alert('No images found for your search. Please try another keyword. (e.g. "galaxy", "planet", etc.)');
+    </script>
+    <% } %>
 
 </body>
 </html>
